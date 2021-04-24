@@ -35,6 +35,8 @@ class UserController {
             const refreshToken = randtoken.uid(256);
             refreshTokenInstance.setRefreshToken(refreshToken, email);
 
+            console.log(refreshTokenInstance);
+
             return res.json({
                 token,
                 refreshToken
@@ -95,6 +97,43 @@ class UserController {
         } catch (e) {
             res.status(500).json({
                 message: "Произошла какая та ошибка" + e
+            });
+        }
+    }
+
+    async refreshToken(req, res) {
+        try {
+            const email = req.body.email;
+            const refreshToken = req.body.refreshToken;
+            const refreshTokens = refreshTokenInstance.get();
+
+            if ((refreshToken in refreshTokens) && (refreshTokens[refreshToken] == email)) {
+                const user = await User.findOne({
+                    email
+                });
+
+                if (!user) {
+                    return res.status(401).json({
+                        message: "Не правильный refresh токен"
+                    });
+                }
+
+                const newToken = createJwtToken(user._id);
+                const newRefreshToken = randtoken.uid(256);
+                delete refreshTokenInstance[refreshToken];
+                refreshTokenInstance.setRefreshToken(newRefreshToken, email);
+
+                return res.json({ token: newToken, refreshToken: newRefreshToken });
+            }
+            else {
+                return res.status(401).json({
+                    message: "Пользователь не авторизован"
+                });
+            }
+        } catch (error) {
+
+            return res.status(401).json({
+                message: "Пользователь не авторизован"
             });
         }
     }
