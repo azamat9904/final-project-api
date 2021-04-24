@@ -57,7 +57,7 @@ class UserController {
                 errors.errors?.forEach((error) => {
                     errorInfo[error.param] = error.msg;
                 })
-                res.status(400).json({ message: errorInfo });
+                return res.status(400).json({ message: errorInfo });
             }
             const { email, password, first_name, last_name } = req.body;
             const isUserExist = await User.findOne({ email });
