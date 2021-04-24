@@ -18,6 +18,10 @@ const User = new Schema({
         type: String,
         required: true
     },
+    verified: {
+        type: Boolean,
+        default: false
+    }
 }, {
     timestamps: true
 });

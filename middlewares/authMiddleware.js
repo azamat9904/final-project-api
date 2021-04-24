@@ -1,3 +1,5 @@
+const verifyToken = require("../utils/verifyToken");
+
 module.exports = function (req, res, next) {
     if (req.method === "OPTIONS") {
         next();
@@ -10,7 +12,8 @@ module.exports = function (req, res, next) {
                 message: "Пользователь не авторизован"
             });
         }
-        const decodedData = jwt.verify(token, process.env.SECRET || "");
+
+        const decodedData = verifyToken(token);
         req.user = decodedData;
         next();
     } catch (e) {
