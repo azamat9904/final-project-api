@@ -7,5 +7,8 @@ const router = Router();
 router.post("/increase-views", postController.increaseView);
 router.post("/create", authMiddleware, upload.single("image"), postController.createPost);
 router.post("/find", postController.find);
-
+router.post("/findByAlias", postController.findByAlias);
+router.post("/edit", authMiddleware, postController.edit);
+router.post("/delete", authMiddleware, postController.delete);
+// router.post("/search", postController.);
 module.exports = router;

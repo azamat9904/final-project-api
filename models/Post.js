@@ -13,6 +13,10 @@ const Post = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     },
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: "Category"
+    },
     content: {
         type: String,
         required: true

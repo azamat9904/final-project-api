@@ -174,7 +174,7 @@ class UserController {
         const id = req.user.payload;
         const user = await User.findOne({ _id: id });
         if (!user) {
-            res.status(403).json({
+            res.status(401).json({
                 message: "Вы не авторизованы"
             });
         }

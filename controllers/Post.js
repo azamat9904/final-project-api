@@ -1,4 +1,5 @@
 const Post = require("../models/Post");
+const Category = require("../models/Category");
 
 class PostController {
 
@@ -78,6 +79,66 @@ class PostController {
                 message: "Случилось какая та ошибка"
             })
         }
+    }
+
+    // async search(req, res) {
+    //     try {
+    //         const searchValue = req.body.searchValue;
+    //         const posts = Post.find({ title: { $regex: '.*' + searchValue + '.*' } });
+
+    //     } catch (error) {
+    //         return res.status(404).json({
+    //             message: "Такой пост не найден"
+    //         })
+    //     }
+
+
+    // }
+
+    async findByAlias(req, res) {
+        try {
+            const alias = req.body.alias;
+            const category = await Category.findOne({ alias });
+            const id = category._id;
+
+            if (!id) {
+                return res.json({
+                    message: "Такая категория не существует"
+                });
+            }
+
+            const posts = await Post.find({ category: id });
+
+            return res.json({
+                posts
+            });
+        } catch (error) {
+            return res.status(400).json({
+                message: "Случилось какая та ошибка"
+            });
+        }
+    }
+
+    async edit() {
+        const id = req.user.paylaod;
+    }
+
+    async delete(req, res) {
+        const id = req.user.payload;
+        const postId = req.body.post_id;
+
+        const post = await Post.findOne({ _id: postId });
+
+        if (post.user != id) {
+            return res.status(403).json({
+                message: "У вас нет доступка к удалению поста"
+            });
+        }
+
+        await post.remove();
+        return res.json({
+            message: "Пост успешно удален"
+        });
     }
 };
 
