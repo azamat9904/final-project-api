@@ -12,4 +12,5 @@ router.post("/verify-email", userController.verifyEmail);
 router.get("/me", authMiddleware, userController.me);
 router.post("/forget-password", userController.forgetPassword);
 router.post("/reset-password", userController.resetPassword);
+
 module.exports = router;

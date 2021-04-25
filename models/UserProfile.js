@@ -3,20 +3,19 @@ const { Schema, model } = require("mongoose");
 const UserProfile = new Schema({
     address: {
         type: String,
-        unique: true,
-        required: true
+        default: ""
     },
     city: {
         type: String,
-        required: true
+        default: ""
     },
     country: {
         type: String,
-        required: true
+        default: ""
     },
     image: {
         type: String,
-        required: true
+        default: ""
     },
     user_id: {
         type: Schema.Types.ObjectId,
