@@ -17,7 +17,7 @@ const UserProfile = new Schema({
         type: String,
         default: ""
     },
-    user_id: {
+    user: {
         type: Schema.Types.ObjectId,
         ref: "User"
     }

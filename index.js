@@ -2,7 +2,7 @@ const express = require("express");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const userProfileRoutes = require("./routes/userProfile");
-
+const postRoutes = require("./routes/postRoutes");
 const createDBConnection = require("./core/db");
 const dotenv = require('dotenv');
 
@@ -16,6 +16,7 @@ app.use(express.static('uploads'));
 app.use("/users", userRoutes);
 app.use("/user-profile", userProfileRoutes);
 app.use("/category", categoryRoutes);
+app.use("/post", postRoutes);
 
 const start = async () => {
     try {

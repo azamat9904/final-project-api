@@ -6,21 +6,18 @@ class UserProfileController {
         let id = req.user.payload;
         let { address, city, country } = req.body;
         let image = req.file;
-        let userProfile = await UserProfile.findOne({ user_id: id });
+        let userProfile = await UserProfile.findOne({ user: id });
         let url = process.env.HOST + '/';
 
         if (!userProfile) {
             image = image ? url + image.filename : "";
-            address = address ? address : "";
-            city = city ? city : "";
-            country = country ? country : "";
 
             const userProfile = new UserProfile({
                 city,
                 country,
                 image,
                 address,
-                user_id: id
+                user: id
             });
             await userProfile.save();
             return res.json({
@@ -30,8 +27,8 @@ class UserProfileController {
 
         const updateData = {};
 
-        if (image) {
-            updateData['image'] = image;
+        if (city) {
+            updateData['city'] = city;
         }
 
         if (address) {
@@ -47,6 +44,7 @@ class UserProfileController {
         }
 
         await userProfile.update(updateData);
+
         res.json({
             message: "Профиль успешно обновлен"
         });
