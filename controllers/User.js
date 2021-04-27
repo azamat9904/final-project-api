@@ -76,7 +76,7 @@ class UserController {
             await user.save();
 
             const specialToken = createJwtToken(user._id + '.' + process.env.SECRET);
-            const url = "http://localhost:8000?token=" + specialToken;
+            const url = "http://localhost:8080?token=" + specialToken;
 
             const mailOptions = {
                 from: process.env.EMAIL,
@@ -142,6 +142,7 @@ class UserController {
         try {
             const secret = req.body.token;
             const { payload } = verifyToken(secret);
+
             const id = payload.split(".")[0];
             if (!id) {
                 return res.status(400).json({
@@ -204,7 +205,7 @@ class UserController {
         }
 
         const token = createJwtToken(user._id);
-        const url = "http://localhost:8000?token=" + token;
+        const url = "http://localhost:8080/auth/change-password?token=" + token;
 
         const mailOptions = {
             from: process.env.EMAIL,

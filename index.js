@@ -6,11 +6,14 @@ const postRoutes = require("./routes/postRoutes");
 const videRoutes = require("./routes/videoRoutes");
 const createDBConnection = require("./core/db");
 const dotenv = require('dotenv');
+const cors = require('cors')
 
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
+
+app.use(cors())
 app.use(express.json());
 app.use(express.static('uploads'));
 
