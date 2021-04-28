@@ -45,6 +45,7 @@ class PostController {
                 message: "Пост успешно создан"
             });
         } catch (error) {
+            console.log(error);
 
             return res.status(500).json({
                 message: "Случилось какая та ошибка"

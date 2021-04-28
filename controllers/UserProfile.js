@@ -7,16 +7,20 @@ class UserProfileController {
     async profileHandler(req, res) {
         let id = req.user.payload;
         let { address, city, country, password, first_name, last_name } = req.body;
+
         let image = req.file;
         let userProfile = await UserProfile.findOne({ user: id });
         let url = process.env.HOST + '/';
 
-        if (password) {
-            const user = await User.findOne({ _id: id });
-            const hashPassword = generatePasswordHash(password);
-            let data = {
-                password: hashPassword
-            };
+        try {
+            let data = {};
+
+            if (password) {
+                const hashPassword = generatePasswordHash(password);
+                data = {
+                    password: hashPassword
+                }
+            }
 
             if (first_name) {
                 data = {
@@ -32,7 +36,12 @@ class UserProfileController {
                 }
             }
 
+            const user = await User.findOne({ _id: id });
             await user.updateOne(data);
+        } catch (error) {
+            res.status(400).json({
+                message: "Что то пошло не так"
+            });
         }
 
         if (!userProfile) {
@@ -69,7 +78,7 @@ class UserProfileController {
             updateData['image'] = url + image.filename;
         }
 
-        await userProfile.update(updateData);
+        await userProfile.updateOne(updateData);
 
         res.json({
             message: "Профиль успешно обновлен"
