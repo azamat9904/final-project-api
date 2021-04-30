@@ -1,5 +1,6 @@
 const Post = require("../models/Post");
 const Category = require("../models/Category");
+const UserProfile = require("../models/UserProfile");
 
 class PostController {
 
@@ -58,16 +59,16 @@ class PostController {
             const param = req.body.param;
 
             if (param == "popular") {
-                const post = await Post.find().sort({ view_count: -1 }).limit(10);
+                const posts = await Post.find().sort({ view_count: -1 }).limit(10);
                 return res.json({
-                    post
+                    posts
                 });
             }
 
             if (param == "last") {
-                const post = await Post.find().sort({ createdAt: -1 }).limit(10);
+                const posts = await Post.find().sort({ createdAt: -1 }).limit(10);
                 return res.json({
-                    post
+                    posts
                 });
             }
 
@@ -140,6 +141,30 @@ class PostController {
         return res.json({
             message: "Пост успешно удален"
         });
+    }
+
+    async getPostById(req, res) {
+        try {
+            const postId = req.query.post_id;   
+            const post = await Post.findOne({ _id: postId }).populate(['user', 'category']);
+            const userId = post.user._id;
+            const userProfile = await UserProfile.findOne({ user: userId });
+
+            post.user.image = userProfile.image;
+
+            return res.json({
+                post,
+                userImage: userProfile.image
+            });
+
+        } catch (error) {
+            console.log(error);
+
+            return res.status(400).json({
+                message: "Случилось какая та ошибка"
+            });
+        }
+
     }
 };
 
