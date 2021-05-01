@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const RefreshToken = require("../utils/RefreshToken");
 const mailer = require("../core/nodemailer");
 const verifyToken = require("../utils/verifyToken");
+const UserProfile = require("../models/UserProfile");
 const refreshTokenInstance = new RefreshToken();
 
 class UserController {
@@ -45,6 +46,26 @@ class UserController {
             })
         }
 
+    }
+    async getUserById(req, res) {
+        try {
+            const userId = req.body.userId;
+            console.log(userId);
+            const user = await User.findOne({ _id: userId });
+            const userProfile = await UserProfile.findOne({ user: userId });
+            res.json({
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                image: userProfile?.image || ""
+            });
+        } catch (error) {
+            console.log(error);
+
+            return res.status(400).json({
+                message: "Ошибка авторизации"
+            })
+        }
     }
 
     async registration(req, res) {
@@ -174,6 +195,8 @@ class UserController {
     async me(req, res) {
         const id = req.user.payload;
         const user = await User.findOne({ _id: id });
+        const userProfile = await UserProfile({ user: id });
+
         if (!user) {
             res.status(401).json({
                 message: "Вы не авторизованы"
@@ -183,7 +206,8 @@ class UserController {
         return res.json({
             email: user.email,
             first_name: user.first_name,
-            last_name: user.last_name
+            last_name: user.last_name,
+            image: userProfile.image
         });
     }
 
