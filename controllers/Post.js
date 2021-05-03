@@ -83,19 +83,28 @@ class PostController {
         }
     }
 
-    // async search(req, res) {
-    //     try {
-    //         const searchValue = req.body.searchValue;
-    //         const posts = Post.find({ title: { $regex: '.*' + searchValue + '.*' } });
+    async search(req, res) {
+        try {
+            const searchValue = req.body.searchValue;
+            const posts = await Post.find({
+                $or: [
+                    { title: { $regex: '.*' + searchValue + '.*', $options: 'i' } },
+                    { description: { $regex: '.*' + searchValue + '.*', $options: 'i' } }
+                ]
+            });
+            res.json({
+                posts
+            });
+        } catch (error) {
+            console.log(error);
 
-    //     } catch (error) {
-    //         return res.status(404).json({
-    //             message: "Такой пост не найден"
-    //         })
-    //     }
+            return res.status(404).json({
+                message: "Такой пост не найден"
+            })
+        }
 
 
-    // }
+    }
 
     async findByAlias(req, res) {
         try {
@@ -145,7 +154,7 @@ class PostController {
 
     async getPostById(req, res) {
         try {
-            const postId = req.query.post_id;   
+            const postId = req.query.post_id;
             const post = await Post.findOne({ _id: postId }).populate(['user', 'category']);
             const userId = post.user._id;
             const userProfile = await UserProfile.findOne({ user: userId });
@@ -165,6 +174,21 @@ class PostController {
             });
         }
 
+    }
+
+    async getAll(req, res) {
+        try {
+            const posts = await Post.find();
+
+            return res.json({
+                posts
+            });
+
+        } catch (error) {
+            return res.status(400).json({
+                message: "Случилось какая та ошибка"
+            });
+        }
     }
 };
 

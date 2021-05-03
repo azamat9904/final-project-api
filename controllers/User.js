@@ -38,9 +38,11 @@ class UserController {
 
             return res.json({
                 token,
-                refreshToken
+                refreshToken,
+                email: user.email
             });
         } catch (error) {
+            console.log(error);
             return res.status(400).json({
                 message: "Ошибка авторизации"
             })
@@ -144,7 +146,7 @@ class UserController {
                 delete refreshTokenInstance[refreshToken];
                 refreshTokenInstance.setRefreshToken(newRefreshToken, email);
 
-                return res.json({ token: newToken, refreshToken: newRefreshToken });
+                return res.json({ token: newToken, refreshToken: newRefreshToken, email: email });
             }
             else {
                 return res.status(401).json({

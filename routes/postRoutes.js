@@ -11,5 +11,6 @@ router.post("/findByAlias", postController.findByAlias);
 router.post("/edit", authMiddleware, postController.edit);
 router.post("/delete", authMiddleware, postController.delete);
 router.get("/getPostById", postController.getPostById);
-// router.post("/search", postController.);
+router.post("/search", postController.search);
+router.get("/getAll", postController.getAll);
 module.exports = router;
