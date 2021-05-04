@@ -86,12 +86,34 @@ class PostController {
     async search(req, res) {
         try {
             const searchValue = req.body.searchValue;
-            const posts = await Post.find({
-                $or: [
-                    { title: { $regex: '.*' + searchValue + '.*', $options: 'i' } },
-                    { description: { $regex: '.*' + searchValue + '.*', $options: 'i' } }
-                ]
-            });
+            const alias = req.body.alias;
+            let posts = [];
+
+            if (!alias) {
+                posts = await Post.find({
+                    $or: [
+                        { title: { $regex: '.*' + searchValue + '.*', $options: 'i' } },
+                        { description: { $regex: '.*' + searchValue + '.*', $options: 'i' } }
+                    ]
+                },
+                );
+            } else {
+                const category = await Category.findOne({ alias });
+                posts = await Post.find({
+                    $and: [
+                        {
+                            $or: [
+                                { title: { $regex: '.*' + searchValue + '.*', $options: 'i' } },
+                                { description: { $regex: '.*' + searchValue + '.*', $options: 'i' } }
+                            ]
+                        },
+                        {
+                            category: category._id
+                        }
+                    ]
+                });
+            }
+
             res.json({
                 posts
             });

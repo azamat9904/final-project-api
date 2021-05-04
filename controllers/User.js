@@ -149,11 +149,14 @@ class UserController {
                 return res.json({ token: newToken, refreshToken: newRefreshToken, email: email });
             }
             else {
+               
+
                 return res.status(401).json({
                     message: "Пользователь не авторизован"
                 });
             }
         } catch (error) {
+            console.log(error);
 
             return res.status(401).json({
                 message: "Пользователь не авторизован"
