@@ -1,6 +1,7 @@
 const Post = require("../models/Post");
 const Category = require("../models/Category");
 const UserProfile = require("../models/UserProfile");
+const axios = require('axios');
 
 class PostController {
 
@@ -30,6 +31,7 @@ class PostController {
             image = image ? url + image.filename : "";
             const userId = req.user.payload;
             const { title, description, category, content } = req.body;
+            const cleanText = content.replace(/<\/?[^>]+(>|$)/g, "");
 
             const post = new Post({
                 title,
@@ -40,11 +42,26 @@ class PostController {
                 category
             });
 
-            await post.save();
-
-            return res.json({
-                message: "Пост успешно создан"
+            const { data } = await axios.post("http://127.0.0.1:8000/pred/predict", {
+                title: cleanText.slice(0, content.length > 100 ? 100 : content.length)
             });
+
+
+            if (data.result == 1) {
+                await post.save();
+
+                return res.json({
+                    message: "Пост успешно создан",
+                    result: data.result,
+                    probability: data.probability
+                });
+            } else {
+                return res.status(500).json({
+                    message: "Ваша статья не соответствует к теме",
+                    result: data.result,
+                    probability: data.probability
+                });
+            }
         } catch (error) {
             console.log(error);
 
