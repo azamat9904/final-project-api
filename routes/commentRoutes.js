@@ -4,7 +4,7 @@ const commentController = require("../controllers/Comment");
 
 const router = Router();
 
-router.post("/getCommentsById", authMiddleware, commentController.getComments);
+router.post("/getCommentsById", commentController.getComments);
 router.post("/create", authMiddleware, commentController.createComment);
 
 module.exports = router;

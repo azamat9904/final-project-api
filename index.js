@@ -3,7 +3,7 @@ const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const userProfileRoutes = require("./routes/userProfile");
 const postRoutes = require("./routes/postRoutes");
-const videRoutes = require("./routes/videoRoutes");
+const videoRoutes = require("./routes/videoRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const createDBConnection = require("./core/db");
 const dotenv = require('dotenv');
@@ -22,7 +22,7 @@ app.use("/users", userRoutes);
 app.use("/user-profile", userProfileRoutes);
 app.use("/category", categoryRoutes);
 app.use("/post", postRoutes);
-app.use("/video", videRoutes);
+app.use("/video", videoRoutes);
 app.use("/comment", commentRoutes);
 
 const start = async () => {

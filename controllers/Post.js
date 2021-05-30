@@ -63,8 +63,6 @@ class PostController {
                 });
             }
         } catch (error) {
-            console.log(error);
-
             return res.status(500).json({
                 message: "Случилось какая та ошибка"
             });
@@ -141,8 +139,6 @@ class PostController {
                 message: "Такой пост не найден"
             })
         }
-
-
     }
 
     async findByAlias(req, res) {
@@ -195,6 +191,7 @@ class PostController {
         try {
             const postId = req.query.post_id;
             const post = await Post.findOne({ _id: postId }).populate(['user', 'category']);
+
             const userId = post.user._id;
             const userProfile = await UserProfile.findOne({ user: userId });
 

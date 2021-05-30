@@ -12,6 +12,10 @@ const Comment = new Schema({
     materialId: {
         type: String,
         required: true
+    },
+    type: {
+        type: Number,
+        required: true
     }
 }, {
     timestamps: true

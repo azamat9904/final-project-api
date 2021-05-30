@@ -4,7 +4,9 @@ class CommentController {
     async getComments(req, res) {
         try {
             const dataID = req.body.id;
-            const comments = await Comment.find({ materialId: dataID }).sort({ createdAt: 1 });
+            const type = req.body.type || 1;
+
+            const comments = await Comment.find({ materialId: dataID, type }).sort({ createdAt: 1 });
             return res.json({
                 comments
             });
@@ -20,11 +22,15 @@ class CommentController {
             const userId = req.user.payload;
             const userComment = req.body.comment;
             const materialId = req.body.materialId;
+            const typeId = req.body.type || 1;
+
             const comment = new Comment({
                 user: userId,
                 comment: userComment,
-                materialId
+                materialId,
+                type: typeId
             });
+
             await comment.save();
             res.json({
                 comment

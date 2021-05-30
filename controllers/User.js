@@ -30,8 +30,7 @@ class UserController {
                     message: "Данные не верны"
                 });
             }
-
-
+            
             const token = createJwtToken(user._id);
             const refreshToken = randtoken.uid(256);
             refreshTokenInstance.setRefreshToken(refreshToken, email);
@@ -42,7 +41,6 @@ class UserController {
                 email: user.email
             });
         } catch (error) {
-            console.log(error);
             return res.status(400).json({
                 message: "Ошибка авторизации"
             })
@@ -52,7 +50,6 @@ class UserController {
     async getUserById(req, res) {
         try {
             const userId = req.body.userId;
-            console.log(userId);
             const user = await User.findOne({ _id: userId });
             const userProfile = await UserProfile.findOne({ user: userId });
             res.json({
@@ -62,8 +59,6 @@ class UserController {
                 image: userProfile?.image || ""
             });
         } catch (error) {
-            console.log(error);
-
             return res.status(400).json({
                 message: "Ошибка авторизации"
             })
@@ -149,7 +144,7 @@ class UserController {
                 return res.json({ token: newToken, refreshToken: newRefreshToken, email: email });
             }
             else {
-               
+
 
                 return res.status(401).json({
                     message: "Пользователь не авторизован"
